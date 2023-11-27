@@ -1,11 +1,12 @@
-import appConfig from "./2-utils/app-config";
-import express from "express";
-import socketService from "./5-services/socket-service";
+import express from 'express';
+import socketService from './services/socket-service';
+import config from './config';
 
-const expressServer = express();
+const app = express();
+
 //give me natvie http server 4 socket
-const httpServer = expressServer.listen(appConfig.port, () =>
-  console.log(" U listening on port http://localhost:" + appConfig.port)
+const httpServer = app.listen(config.PORT, () =>
+  console.log('listening on port http://localhost:' + config.PORT)
 );
 
 //send native http server to soket service
