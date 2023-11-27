@@ -1,20 +1,62 @@
-const dummyDB = {
-    roomData: [
-      { roomName: "Room1", codeTitle: "Welcome Message", code: "const greeting = 'Hello, Room 1!';" },
-      { roomName: "Room2", codeTitle: "Addition Function", code: "function add(a, b) { return a + b; }" },
-      { roomName: "Room3", codeTitle: "List of Items", code: "const items = ['apple', 'banana', 'orange'];" },
-      // Add more dummy room data as needed
-    ],
-    getCode: async (roomName: string): Promise<{ title: string; code: string }> => {
-      const room = dummyDB.roomData.find((room) => room.roomName === roomName);
-      return room ? { title: room.codeTitle, code: room.code } : { title: "", code: "" };
-    },
-    saveCode: async (roomName: string, codeTitle: string, code: string): Promise<void> => {
-      // In a real implementation, you'd save code to the database
-      // For this example, we'll just log the roomName, codeTitle, and code to the console
-      console.log(`Saving code for room '${roomName}' with title '${codeTitle}':`, code);
-    },
-  };
-  
-  export default dummyDB;
-  
+const codeBlocks = [
+  {
+    roomName: "css",
+    title: "Styling a Button",
+    code:
+      `.button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+      }`,
+  },
+  {
+    roomName: "js",
+    title: "Fetching Data from an API",
+    code:
+      `(async () => {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+        const data = await response.json();
+        console.log(data);
+      })();`,
+  },
+  {
+    roomName: "html",
+    title: "Creating a Simple Form",
+    code:
+      `<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Form</title>
+</head>
+<body>
+  <h1>Simple Form</h1>
+  <form action="/submit">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>`,
+  },
+  {
+    roomName: "css",
+    title: "Responsive Layout",
+    code:
+      `@media (max-width: 768px) {
+        body {
+          font-size: 14px;
+        }
+        h1 {
+          font-size: 22px;
+        }
+      }`,
+  },
+];
+
+export default codeBlocks;

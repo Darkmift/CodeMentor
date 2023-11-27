@@ -15,28 +15,12 @@ function handleSocketIo(httpServer: HttpServer): void {
   socketIoServer.sockets.on("connection",async  (socket: Socket) => {
     console.log("client is connected to socket.io server");
     socket.on("joinedRoom",(data)=>{
-      const code=codeBlocks.find(data.roomName)
-      socket.emit("sendCode",code)
+      // const code=codeBlocks.getCode(data.roomName);//await dbService.getCode(data.roomName)
+      // socket.emit("sendCode",code)
     })
 
     socket.on("codeEdited", (data: { roomName: string; code: string }) => {
-      
       // 1.save code to db
-      const updatedCodeBlocks = codeBlocks.map((block) => {
-        if (block.roomName === data.roomName) {
-          return { ...block, code: data.code };
-        }
-        return block;
-      });
-      //saving in db
-      codeBlocks.length = 0; 
-      codeBlocks.push(...updatedCodeBlocks)
-      //change the room data
-      socket.to(data.roomName).emit("codeEdited", {
-        roomName: data.roomName,
-        code: data.code,
-      });
-
       // await dbService.saveCode(data.roomName)
       // 2.emit to room new code
       socket
