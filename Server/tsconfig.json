@@ -3,9 +3,10 @@
         "strictNullChecks": false,
         "target": "ES6",
         "esModuleInterop": true,
-        "moduleResolution": "Node"
+        "moduleResolution": "node",
+        "outDir": "./dist"
     },
     "include": [
         "src/**/*.ts"
-      ]
+    ]
 }
