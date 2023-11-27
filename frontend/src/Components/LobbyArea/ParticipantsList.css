@@ -1,0 +1,22 @@
+/* ParticipantsList.css */
+
+.participantsList {
+  background-color: #333; /* Dark background */
+  color: #fff; /* White text */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.participantsList h2 {
+  color: #4db6ac; /* Teal heading color */
+  margin-bottom: 10px;
+}
+
+.participantsList ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.participantsList li {
+  margin-bottom: 5px;
+}

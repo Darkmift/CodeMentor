@@ -1,0 +1,16 @@
+// import CodeBlock from "../CodeBlock";
+
+// function Lobby(): JSX.Element {
+//     return (
+//       <div>
+//         <h1>Choose a Code Block</h1>
+//         <CodeBlock>first</CodeBlock>
+//         <CodeBlock>first</CodeBlock>
+
+//         <div className="codeContainer">Async Await</div>
+//       </div>
+//     );
+//   }
+  
+//   export default Lobby;
+  
