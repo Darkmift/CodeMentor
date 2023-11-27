@@ -21,29 +21,28 @@ function handleSocketIo(httpServer: HttpServer): void {
 
   //1) the server listen to client connections
   io.on('connection', async (socket: Socket) => {
-    console.log('client is connected to socket.io server', socket.id, socket);
+    console.log('client is connected to socket.io server', { id: socket.id });
 
     socket.on('joinedRoom', ({ roomName }) => {
-      const code = dbCodeService.find(roomName);
+      const { code } = dbCodeService.find((codeBlock) => codeBlock.roomName === roomName);
       socket.emit('sendCode', code);
+
+      leaveAllRoomsExceptOwn(socket);
+      socket.join(roomName);
 
       // After joining the room, fetch and log all clients in that room
       const roomOccupants = io.sockets.adapter.rooms.get(roomName);
-      if (roomOccupants) {
-        console.log(`Clients in room ${roomName}:`, roomOccupants);
-      }
 
-      let role = [...roomOccupants].length === 0 ? 'mentor' : 'student';
+      console.log(`Clients in room ${roomName}:`, roomOccupants);
+      const role: 'mentor' | 'student' = [...roomOccupants].length === 1 ? 'mentor' : 'student';
 
-      socket.join(roomName);
-      leaveAllRoomsExceptOwn(socket);
-
-      socket.emit('role', role);
+      socket.emit('role', { role });
+      socket.emit('codeEdited', { code, roomName });
       console.log(`role of ${socket.id} is: ${role}`);
     });
 
     // client -> socket.emit('codeEdited', { roomName, code })
-    socket.on('codeEdited', (data: { roomName: string; code: string }) => {
+    socket.on('emitCodeChange', (data: { roomName: string; code: string }) => {
       // 1.save code to db
       const updatedCodeBlock = dbCodeService.find(
         (codeBlock) => codeBlock.roomName === data.roomName

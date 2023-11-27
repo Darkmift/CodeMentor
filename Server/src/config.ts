@@ -1,3 +1,3 @@
-const config = { PORT: 5000 };
+const config = { PORT: 4000 };
 
 export default config;

@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import "./Layout.css";
-import EditorCode from "../SocketArea/Chat/EditorCode";
-import ParticipantsList from "../LobbyArea/ParticipantsList";
-import CodeBlockList from "../LobbyArea/CodeBlockList";
+import React, { useEffect, useState } from 'react';
+import './Layout.css';
+import EditorCode from '../SocketArea/Chat/EditorCode';
+import ParticipantsList from '../LobbyArea/ParticipantsList';
+import CodeBlockList from '../LobbyArea/CodeBlockList';
+import socketIoService from '../../Services/SocketIoService';
 
 function Layout(): JSX.Element {
-  const [editorCode, setEditorCode] = useState<string>("");
-  const [editorTitle, setEditorTitle] = useState<string>("");
+  const [editorCode, setEditorCode] = useState<string>('');
+  const [editorTitle, setEditorTitle] = useState<string>('');
+
+  useEffect(() => {
+    socketIoService.connect();
+  }, []);
 
   const updateEditorCode = (code: string, title: string) => {
     setEditorCode(code);

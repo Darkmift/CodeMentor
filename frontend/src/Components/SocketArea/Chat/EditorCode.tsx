@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
-import "./EditorCode.css";
-import socketIoService from "../../../Services/SocketIoService";
+import React, { useEffect, useState } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import './EditorCode.css';
+import socketIoService from '../../../Services/SocketIoService';
+
+import Editor from 'react-simple-code-editor';
+import Prism from 'prismjs'; // Import Prism library
+import 'prismjs/themes/prism.css';
+import 'prismjs/components/prism-python'; // Import Python syntax support
 
 interface EditorCodeProps {
   code: string;
@@ -10,39 +15,32 @@ interface EditorCodeProps {
 }
 
 function EditorCode({ code, title }: EditorCodeProps): JSX.Element {
-  const [editorCode, setEditorCode] = useState<string>("");
-  const [editorTitle, setEditorTitle] = useState<string>("");
+  const [role, setRole] = useState<string>('');
+  const [roomName, setRoomName] = useState<string>('');
+  const [editorCode, setEditorCode] = useState<string>(code);
+  const [editorTitle, setEditorTitle] = useState<string>(title);
 
   useEffect(() => {
-    socketIoService.connect(); // Automatically connect to the socket
-    setEditorCode(code);
-    setEditorTitle(title);
-
-    socketIoService.socket?.on(
-      "codeEdited",
-      (data: { roomName: string; code: string }) => {
-        setEditorCode(data.code);
-        setEditorTitle(data.roomName);
-      }
-    );
+    socketIoService.socket?.on('codeEdited', (data: { roomName: string; code: string }) => {
+      setEditorCode(data.code);
+      setEditorTitle(data.roomName);
+      setRoomName(data.roomName);
+    });
+    socketIoService.socket?.on('role', (data: { role: string }) => {
+      setRole(data.role);
+    });
 
     return () => {
-      socketIoService.socket?.off("codeEdited");
+      socketIoService.socket?.off('codeEdited');
     };
-  }, [code, title]);
+  }, []);
 
-  
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const updatedCode = e.target.value;
-    setEditorCode(updatedCode);
-    socketIoService.socket?.emit("codeEdited", {
-      roomName: editorTitle,
-      code: updatedCode,
-    });
-  };
-  const handleDisconnect = () => {
-    socketIoService.disconnect(); // Call the disconnect method from the socketIoService
-    console.log("You are disconnected!");
+  const handleInput = (e: string) => {
+    const newCode = e;
+    console.log('🚀 ~ file: EditorCode.tsx:40 ~ handleInput ~ newCode:', newCode);
+
+    setEditorCode(newCode);
+    socketIoService.socket?.emit('emitCodeChange', { code: newCode, roomName });
   };
 
   return (
@@ -51,36 +49,30 @@ function EditorCode({ code, title }: EditorCodeProps): JSX.Element {
         <h1>{editorTitle}</h1>
         <div>
           <button>Save Code</button>
-          <button onClick={handleDisconnect}>Disconnect</button>
         </div>
       </div>
+      {role.length ? (
+        <div className="editor-menu">
+          <h3>Room Name: {roomName}</h3>
+          <h3>Your role: {role}</h3>
 
-      <h3>Room Name</h3>
-      <input
-        type="text"
-        value={editorTitle}
-        onChange={(e) => setEditorTitle(e.target.value)}
-        placeholder="Enter Room Name"
-      />
-      <h3>Code Editor</h3>
+          <h3>Code Editor</h3>
 
-      <textarea
-        className="code-display"
-        value={editorCode}
-        onChange={handleChange}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            setEditorCode((prevCode) => prevCode + "\n");
-          }
-        }}
-      />
-      {editorCode && (
-        <div className="highlighted-code">
-          <SyntaxHighlighter language="javascript" style={prism}>
-            {editorCode}
-          </SyntaxHighlighter>
+          <div className="highlighted-code">
+            <Editor
+              value={editorCode}
+              onValueChange={handleInput}
+              highlight={(code) => Prism.highlight(code, Prism.languages[roomName], roomName)}
+              padding={10}
+              style={{
+                fontFamily: '"Fira code", "Fira Mono", monospace',
+                fontSize: 12,
+              }}
+            />
+          </div>
         </div>
+      ) : (
+        <h1>Please select a code block to edit</h1>
       )}
     </div>
   );
