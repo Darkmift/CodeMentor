@@ -1,25 +1,27 @@
-import { Socket, io } from 'socket.io-client';
+import { Socket, io } from "socket.io-client";
 
 export interface CodeBlock {
   code: string;
   roomName: string;
 }
-
+const url = import.meta.env.VITE_SOCKETIO_URL;
 class SocketIoService {
   public socket: Socket;
-
+  
   constructor() {
-    this.socket = io('http://localhost:4000');
+    console.log("🚀 ~ file: SocketIoService.ts:8 ~ url:", url)
+    console.log("🚀 ~ file: SocketIoService.ts:8 ~ url:", import.meta.env)
+    this.socket = io(url);
 
-    this.socket.on('connect', () => {
-      console.log('Connected to SocketIO');
+    this.socket.on("connect", () => {
+      console.log("Connected to SocketIO");
     });
-    this.socket.on('disconnet', () => {
-      console.log('Disconnected from SocketIO');
+    this.socket.on("disconnet", () => {
+      console.log("Disconnected from SocketIO");
     });
   }
 
-  connect(){
+  connect() {
     this.socket.connect();
   }
 }
