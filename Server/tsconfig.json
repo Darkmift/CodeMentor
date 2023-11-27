@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "strictNullChecks": false,
+        "target": "ES6",
+        "esModuleInterop": true,
+        "moduleResolution": "Node"
+    },
+    "include": [
+        "src/**/*.ts"
+      ]
+}
