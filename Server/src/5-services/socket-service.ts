@@ -10,13 +10,26 @@ function handleSocketIo(httpServer: HttpServer): void {
 
   //create the socket.io server (its another server)
   const socketIoServer = new SocketIoServer(httpServer, options);
+  const roomOccupants = {};
 
   //1) the server listen to client connections
   socketIoServer.sockets.on("connection",async  (socket: Socket) => {
     console.log("client is connected to socket.io server");
     socket.on("joinedRoom",(data)=>{
+      const roomName = data.roomName;
       const code=codeBlocks.find(data.roomName)
       socket.emit("sendCode",code)
+      if (!roomOccupants[roomName]) {
+        roomOccupants[roomName] = [];
+      }const occupants = roomOccupants[roomName];
+      let role = "student";
+      if (occupants.length === 0) {
+        role = "mentor";
+      } roomOccupants[roomName].push(socket.id);
+      socket.join(roomName);
+      socket.emit("role", role);
+      console.log(`You are the ${role}`);
+      
     })
 
     socket.on("codeEdited", (data: { roomName: string; code: string }) => {
@@ -45,11 +58,11 @@ function handleSocketIo(httpServer: HttpServer): void {
     });
 
     //(4) listen to client messages:
-    socket.on("msg-client: ", (message: MessageModel) => {
-      console.log("client send msg: ", message);
-      //send given message to all (socketS from line 13) of the clients
-      socketIoServer.sockets.emit("msg-server: ", message);
-    });
+    // socket.on("msg-client: ", (message: MessageModel) => {
+    //   console.log("client send msg: ", message);
+    //   //send given message to all (socketS from line 13) of the clients
+    // //   socketIoServer.sockets.emit("msg-server: ", message);
+    // });
 
     //(7) server listen to client disconnect
     socket.on("disconnect", () => {
