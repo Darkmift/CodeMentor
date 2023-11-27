@@ -1,9 +1,8 @@
 const codeBlocks = [
   {
-    roomName: "css",
-    title: "Styling a Button",
-    code:
-      `.buttonaaa{
+    roomName: 'css1',
+    title: 'Styling a Button',
+    code: `.buttonaaa{
         background-color: #007bff;
         color: white;
         padding: 10px 20px;
@@ -12,20 +11,18 @@ const codeBlocks = [
       }`,
   },
   {
-    roomName: "js",
-    title: "Fetching Data from an API",
-    code:
-      `(async () => {
+    roomName: 'js',
+    title: 'Fetching Data from an API',
+    code: `(async () => {
         const response = await fetch('https://jsonplaceholder.typicode.com/posts/1');
         const data = await response.json();
         console.log(data);
       })();`,
   },
   {
-    roomName: "html",
-    title: "Creating a Simple Form",
-    code:
-      `<!DOCTYPE html>
+    roomName: 'html',
+    title: 'Creating a Simple Form',
+    code: `<!DOCTYPE html>
 <html>
 <head>
   <title>Simple Form</title>
@@ -45,10 +42,9 @@ const codeBlocks = [
 </html>`,
   },
   {
-    roomName: "css",
-    title: "Responsive Layout",
-    code:
-      `@media (max-width: 768px) {
+    roomName: 'css2',
+    title: 'Responsive Layout',
+    code: `@media (max-width: 768px) {
         body {
           font-size: 14px;
         }

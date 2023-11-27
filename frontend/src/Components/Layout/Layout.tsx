@@ -11,15 +11,29 @@ function Layout(): JSX.Element {
 
   useEffect(() => {
     socketIoService.connect();
+    socketIoService.socket?.on('sendCode', (data: { roomName: string; code: string }) => {
+      setEditorCode(data.code);
+    });
   }, []);
 
+  useEffect(() => {
+    console.log('🚀 ~ file: Layout.tsx:17 ~ updateEditorCode ~ title:', {
+      editorCode,
+      editorTitle,
+    });
+  }, [editorCode, editorTitle]);
+
   const updateEditorCode = (code: string, title: string) => {
+    console.log('🚀 ~ file: Layout.tsx:17 ~ updateEditorCode ~ title:', title);
     setEditorCode(code);
     setEditorTitle(title);
+    socketIoService.socket?.emit('joinedRoom', { roomName: title });
   };
 
   const updateTitle = (title: string) => {
+    console.log('🚀 ~ file: Layout.tsx:23 ~ updateTitle ~ title:', title);
     setEditorTitle(title);
+    socketIoService.socket?.emit('joinedRoom', { roomName: title });
   };
 
   const onRoleReceived = (role: string) => {

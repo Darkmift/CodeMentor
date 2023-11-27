@@ -47,9 +47,9 @@ function EditorCode({ code, title }: EditorCodeProps): JSX.Element {
     <div>
       <div className="editor-header">
         <h1>{editorTitle}</h1>
-        <div>
+        {/* <div>
           <button>Save Code</button>
-        </div>
+        </div> */}
       </div>
       {role.length ? (
         <div className="editor-menu">

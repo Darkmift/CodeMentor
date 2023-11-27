@@ -25,7 +25,8 @@ function handleSocketIo(httpServer: HttpServer): void {
 
     socket.on('joinedRoom', ({ roomName }) => {
       const { code } = dbCodeService.find((codeBlock) => codeBlock.roomName === roomName);
-      socket.emit('sendCode', code);
+      socket.emit('sendCode', { code });
+      console.log({ roomName });
 
       leaveAllRoomsExceptOwn(socket);
       socket.join(roomName);
@@ -43,19 +44,25 @@ function handleSocketIo(httpServer: HttpServer): void {
 
     // client -> socket.emit('codeEdited', { roomName, code })
     socket.on('emitCodeChange', (data: { roomName: string; code: string }) => {
+      console.log('🚀 ~ file: socket-service.ts:64 ~ socket.on ~ code:', data.code);
       // 1.save code to db
       const updatedCodeBlock = dbCodeService.find(
         (codeBlock) => codeBlock.roomName === data.roomName
       );
+
       updatedCodeBlock.code = data.code;
 
       //change the room data
+      // socket
+      //   // .to(data.roomName)
+      //   .emit('codeEdited', {
+      //     roomName: data.roomName,
+      //     code: updatedCodeBlock.code,
+      //   });
+
       socket
-        // .to(data.roomName)
-        .emit('codeEdited', {
-          roomName: data.roomName,
-          code: updatedCodeBlock.code,
-        });
+        .to(data.roomName)
+        .emit('codeEdited', { roomName: data.roomName, code: updatedCodeBlock.code });
     });
 
     socket.on('disconnect', () => {
