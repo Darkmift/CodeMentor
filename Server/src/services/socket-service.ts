@@ -21,42 +21,48 @@ function handleSocketIo(httpServer: HttpServer): void {
 
   //1) the server listen to client connections
   io.on('connection', async (socket: Socket) => {
-    console.log('client is connected to socket.io server', socket.id, socket);
+    console.log('client is connected to socket.io server', { id: socket.id });
 
     socket.on('joinedRoom', ({ roomName }) => {
-      const code = dbCodeService.find(roomName);
-      socket.emit('sendCode', code);
+      const { code } = dbCodeService.find((codeBlock) => codeBlock.roomName === roomName);
+      socket.emit('sendCode', { code });
+      console.log({ roomName });
+
+      leaveAllRoomsExceptOwn(socket);
+      socket.join(roomName);
 
       // After joining the room, fetch and log all clients in that room
       const roomOccupants = io.sockets.adapter.rooms.get(roomName);
-      if (roomOccupants) {
-        console.log(`Clients in room ${roomName}:`, roomOccupants);
-      }
 
-      let role = [...roomOccupants].length === 0 ? 'mentor' : 'student';
+      console.log(`Clients in room ${roomName}:`, roomOccupants);
+      const role: 'mentor' | 'student' = [...roomOccupants].length === 1 ? 'mentor' : 'student';
 
-      socket.join(roomName);
-      leaveAllRoomsExceptOwn(socket);
-
-      socket.emit('role', role);
+      socket.emit('role', { role });
+      socket.emit('codeEdited', { code, roomName });
       console.log(`role of ${socket.id} is: ${role}`);
     });
 
     // client -> socket.emit('codeEdited', { roomName, code })
-    socket.on('codeEdited', (data: { roomName: string; code: string }) => {
+    socket.on('emitCodeChange', (data: { roomName: string; code: string }) => {
+      console.log('🚀 ~ file: socket-service.ts:64 ~ socket.on ~ code:', data.code);
       // 1.save code to db
       const updatedCodeBlock = dbCodeService.find(
         (codeBlock) => codeBlock.roomName === data.roomName
       );
+
       updatedCodeBlock.code = data.code;
 
       //change the room data
+      // socket
+      //   // .to(data.roomName)
+      //   .emit('codeEdited', {
+      //     roomName: data.roomName,
+      //     code: updatedCodeBlock.code,
+      //   });
+
       socket
-        // .to(data.roomName)
-        .emit('codeEdited', {
-          roomName: data.roomName,
-          code: updatedCodeBlock.code,
-        });
+        .to(data.roomName)
+        .emit('codeEdited', { roomName: data.roomName, code: updatedCodeBlock.code });
     });
 
     socket.on('disconnect', () => {

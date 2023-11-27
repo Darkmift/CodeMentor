@@ -1,7 +1,7 @@
-import React from "react";
-import "./CodeBlock.css";
-import CodeBlock from "./CodeBlock";
-import codeBlocks from "./dummyDB";
+import React from 'react';
+import './CodeBlock.css';
+import CodeBlock from './CodeBlock';
+import codeBlocks from './dummyDB';
 
 interface CodeBlockListProps {
   updateCode: (roomName: string, code: string) => void;
@@ -9,7 +9,11 @@ interface CodeBlockListProps {
   onRoleReceived: (role: string) => void; // Add the missing prop
 }
 
-function CodeBlockList({ updateCode, updateTitle, onRoleReceived }: CodeBlockListProps): JSX.Element {
+function CodeBlockList({
+  updateCode,
+  updateTitle,
+  onRoleReceived,
+}: CodeBlockListProps): JSX.Element {
   return (
     <div className="codeBlock">
       {codeBlocks.map((block, index) => (

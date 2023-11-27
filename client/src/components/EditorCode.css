@@ -1,0 +1,43 @@
+.code-display {
+  width: 80%;
+  height: 200px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  white-space: pre-wrap;
+  font-family: 'Fira code', 'Fira Mono', monospace;
+  color: black;
+  margin-right: 10px;
+  resize: none; /* Prevent resizing */
+  font-size: 13px;
+}
+
+.highlighted-code {
+  margin-top: 10px;
+  max-height: 400px;
+  border-radius: 5px;
+  background-color: #f3f3f3;
+  font-family: 'Fira code', 'Fira Mono', monospace;
+  overflow-y: auto;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editor-header h1 {
+  margin-top: 0;
+}
+
+.editor-header button {
+  font-family: 'M PLUS 1 Code', monospace;
+  padding: 10px;
+  margin-left: 10px;
+  background-color: #4db6ac;
+  color: rgb(255, 255, 255);
+  font-weight: bolder;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
