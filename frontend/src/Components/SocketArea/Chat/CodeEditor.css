@@ -1,9 +1,0 @@
-/* CodeEditor.css */
-.code-display {
-  border: 1px solid #ccc;
-  padding: 10px;
-  min-height: 200px;
-  white-space: pre-wrap;
-  font-family: monospace;
-}
-
